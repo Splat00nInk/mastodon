@@ -41,7 +41,11 @@
   "keyboard_shortcuts.secondary_toot": "보조 프라이버시 설정으로 글 보내기",
   "moved_to_warning": "이 계정은 {moved_to_link}로 이동한 것으로 표시되었고, 새 팔로우를 받지 않는 것 같습니다.",
   "navigation_bar.app_settings": "앱 설정",
+  "notification.reaction": "{name} 님이 내 게시물에 반응했습니다",
+  "notification.reaction.name_and_others": "{name} 외 {count, plural, other {# 명}}이 내 게시물에 반응했습니다",
   "notifications.column_settings.filter_bar.show_bar": "필터 막대 표시",
+  "notifications.column_settings.reaction": "반응:",
+  "notifications.filter.reactions": "반응",
   "settings.always_show_spoilers_field": "열람주의 항목을 언제나 활성화",
   "settings.close": "닫기",
   "settings.compose_box_opts": "작성 상자",
@@ -112,5 +116,6 @@
   "status.in_reply_to": "이 글은 답글입니다",
   "status.is_poll": "이 글은 설문입니다",
   "status.local_only": "당신의 서버에서만 보입니다",
+  "status.react": "반응",
   "status.show_filter_reason": "그냥 표시하기"
 }
