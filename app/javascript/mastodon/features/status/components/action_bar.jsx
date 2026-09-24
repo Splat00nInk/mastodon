@@ -17,14 +17,15 @@ import { injectIntl } from '@/mastodon/components/intl';
 import { identityContextPropShape, withIdentity } from 'mastodon/identity_context';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'mastodon/permissions';
 
-import { IconButton } from '../../../components/icon_button';
+import { IconButton } from '@/mastodon/components/icon_button';
 import { Dropdown } from 'mastodon/components/dropdown_menu';
-import { me, quickBoosting } from '../../../initial_state';
-import { BoostButton } from '@/mastodon/components/status/boost_button';
+import { me, quickBoosting } from '@/mastodon/initial_state';
+import { BoostButton } from '@/mastodon/components/status/legacy/boost_button';
 import { quoteItemState } from '@/mastodon/components/status/boost_button_utils';
 import { selectStatusConditions } from '@/mastodon/selectors/statuses';
+import { isRedesignEnabled } from '@/mastodon/utils/environment';
 
-const messages = defineMessages({
+const baseMessages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
   redraft: { id: 'status.redraft', defaultMessage: 'Delete & re-draft' },
   edit: { id: 'status.edit', defaultMessage: 'Edit' },
@@ -57,6 +58,15 @@ const messages = defineMessages({
   revokeQuote: { id: 'status.revoke_quote', defaultMessage: 'Remove my post from @{name}’s post' },
   quotePolicyChange: { id: 'status.quote_policy_change', defaultMessage: 'Change who can quote' },
 });
+
+const redesignMessages = defineMessages({
+  favourite: { id: 'status.like', defaultMessage: 'Like' },
+  removeFavourite: { id: 'status.unlike', defaultMessage: 'Unlike' },
+  bookmark: { id: 'status.save', defaultMessage: 'Save' },
+  removeBookmark: { id: 'status.remove_from_saved', defaultMessage: 'Remove from Saved' },
+})
+
+const messages = isRedesignEnabled() ? {...baseMessages, ...redesignMessages} : baseMessages;
 
 const mapStateToProps = (state, { status }) => {
   const quotedStatusId = status.getIn(['quote', 'quoted_status']);
@@ -266,8 +276,10 @@ class ActionBar extends PureComponent {
         menu.push({ text: intl.formatMessage(messages.delete), action: this.handleDeleteClick, dangerous: true });
         menu.push({ text: intl.formatMessage(messages.redraft), action: this.handleRedraftClick, dangerous: true });
       } else {
-        menu.push({ text: intl.formatMessage(messages.mention, { name: status.getIn(['account', 'username']) }), action: this.handleMentionClick });
-        menu.push(null);
+        if (!account.get('invalid_handle')) {
+          menu.push({ text: intl.formatMessage(messages.mention, { name: status.getIn(['account', 'username']) }), action: this.handleMentionClick });
+          menu.push(null);
+        }
 
         if (quotedAccountId === me) {
           menu.push({ text: intl.formatMessage(messages.revokeQuote, { name: account.get('username') }), action: this.handleRevokeQuoteClick, dangerous: true });
@@ -287,7 +299,7 @@ class ActionBar extends PureComponent {
 
         menu.push({ text: intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) }), action: this.handleReport, dangerous: true });
 
-        if (account.get('acct') !== account.get('username')) {
+        if (account.get('acct') !== account.get('username') && !account.get('invalid_handle')) {
           const domain = account.get('acct').split('@')[1];
 
           menu.push(null);
@@ -307,6 +319,7 @@ class ActionBar extends PureComponent {
           }
           if (isRemote && (permissions & PERMISSION_MANAGE_FEDERATION) === PERMISSION_MANAGE_FEDERATION) {
             const domain = account.get('acct').split('@')[1];
+
             menu.push({ text: intl.formatMessage(messages.admin_domain, { domain: domain }), href: `/admin/instances/${domain}` });
           }
         }
