@@ -2,7 +2,23 @@ en:
   skins:
     glitch:
       splatfest-default: Splatter Custom (Default Font)
+  color_theme:
+    splatoon: Splatoon
+    alterna: Alterna
+    frostyfest: FrostyFest
+    raiders: Splatoon Raiders
+    splatoween: Splatoween
+    springfest: SpringFest
+    summernights: SummerNights
 ko:
   skins:
     glitch:
       splatfest-default: 스플래터 커스텀 (기본 폰트)
+  color_theme:
+    splatoon: 스플래툰
+    alterna: 얼터너
+    frostyfest: FrostyFest
+    raiders: 스플래툰 레이더스
+    splatoween: Splatoween
+    springfest: SpringFest
+    summernights: SummerNights

@@ -1,6 +1,0 @@
-@use '@/flavours/glitch/styles/application';
-@use '@/styles/fonts/splat2k';
-@use '@/styles/splatter/theme';
-
-@include theme.custom-font;
-@include theme.background(url('@/images/bg_frostyfest.webp'));
