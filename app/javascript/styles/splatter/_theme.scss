@@ -159,16 +159,15 @@ $backgrounds: (
       }
     }
 
-    // The navigation panel's header and footer (new post button down to the
-    // account card) are painted with --navigation-background-color, and the
-    // footer stretches over all remaining height. Keep them transparent so
-    // the artwork shows through, and only add a tinted, blurred backdrop
-    // while they are actually stuck over scrolled navigation links.
+    // The navigation panel's header (logo) and footer (new post button down
+    // to the account card) are painted with --navigation-background-color,
+    // and the footer stretches over all remaining height. Keep them
+    // transparent so the artwork shows through, and only give the sticky
+    // header a tinted, blurred backdrop while links scroll underneath it.
     ._feat_navigation_panel__root:not([data-mode='slide-out']) {
       --navigation-background-color: transparent;
 
-      ._feat_navigation_panel_header__root[data-stuck='true'],
-      ._feat_navigation_panel__footer[data-stuck='true'] {
+      ._feat_navigation_panel_header__root[data-stuck='true'] {
         background-color: rgb(
           from var(--base-color-bg-desktop) r g b / #{$desktop-alpha}
         );
