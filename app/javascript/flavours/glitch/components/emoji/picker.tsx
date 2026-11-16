@@ -62,18 +62,26 @@ const messages = defineMessages({
   flags: { id: 'emoji_button.flags', defaultMessage: 'Flags' },
 });
 
+type IconButtonComponentProps = React.ComponentProps<typeof IconButton>;
+
 export const EmojiPickerButton: React.FC<{
   onPick: OnEmojiPick;
   disabled?: boolean;
   placement?: Placement;
   className?: string;
-  size?: React.ComponentProps<typeof IconButton>['size'];
+  size?: IconButtonComponentProps['size'];
+  variant?: IconButtonComponentProps['variant'];
+  icon?: IconButtonComponentProps['icon'];
+  label?: React.ReactNode;
 }> = ({
   onPick,
   disabled,
   placement = 'top-start',
   className,
   size = 'sm',
+  variant,
+  icon = SmileyIcon,
+  label,
 }) => {
   const [open, { onToggle, onFalse }] = useToggle();
   const [target, setTarget] = useState<HTMLButtonElement | null>(null);
@@ -82,20 +90,24 @@ export const EmojiPickerButton: React.FC<{
     <>
       <IconButton
         size={size}
-        icon={SmileyIcon}
+        variant={variant}
+        icon={icon}
         ref={setTarget}
         onClick={onToggle}
         aria-expanded={open}
         className={className}
+        disabled={disabled}
       >
-        <FormattedMessage
-          id='emoji_button.label'
-          defaultMessage='Insert emoji'
-        />
+        {label ?? (
+          <FormattedMessage
+            id='emoji_button.label'
+            defaultMessage='Insert emoji'
+          />
+        )}
       </IconButton>
 
       <Popover
-        isOpen={open}
+        isOpen={open && !disabled}
         onClose={onFalse}
         reference={target}
         placement={placement}
@@ -106,7 +118,6 @@ export const EmojiPickerButton: React.FC<{
             onPick={onPick}
             onClose={onFalse}
             className={placement}
-            disabled={disabled}
             {...props}
           />
         )}

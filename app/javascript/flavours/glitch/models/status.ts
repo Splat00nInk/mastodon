@@ -17,6 +17,7 @@ import type {
   ApiQuoteJSON,
   ApiQuotePolicyJSON,
 } from '@/flavours/glitch/api_types/quotes';
+import type { ApiStatusReactionJSON } from '@/flavours/glitch/api_types/reaction';
 import type {
   ApiFilterResultJSON,
   ApiMentionJSON,
@@ -86,6 +87,9 @@ export interface StatusShape {
   reblogs_count: number;
   replies_count: number;
   visibility: StatusVisibility;
+
+  // glitch-soc emoji reactions
+  reactions?: ApiStatusReactionJSON[];
 }
 export type AccountStatusShape = Omit<StatusShape, 'account'> & {
   account: AccountShapeFull;

@@ -42,6 +42,7 @@ import {
   StatusLikeBurstActiveIcon,
   StatusLikeBurstIcon,
 } from './like_burst_icon';
+import { StatusReactButton } from './reactions';
 import classes from './styles.module.scss';
 import { getStatusContent } from './utils';
 
@@ -156,10 +157,15 @@ export const StatusActionBar: React.FC<StatusActionBarProps> = ({
         onClick={handleLikeClick}
         data-like-burst={likeBurst || undefined}
         onAnimationEnd={handleLikeAnimationEnd}
-        className={classes.actionsButtonGap}
       >
         {withCounters && <AnimatedNumber value={like.counter ?? 0} />}
       </ToggleButton>
+
+      <StatusReactButton
+        statusId={statusId}
+        reactions={status.reactions}
+        className={classes.actionsButtonGap}
+      />
 
       {isPublic && (
         <IconButton

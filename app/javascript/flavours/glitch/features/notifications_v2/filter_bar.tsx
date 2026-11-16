@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import {
   StatusBoostIcon,
   StatusLikeIcon,
+  StatusReactIcon,
   StatusReplyAllIcon,
 } from '@/flavours/glitch/components/status/icons';
 import CollectionsIcon from '@/material-icons/400-24px/category.svg?react';
@@ -26,6 +27,10 @@ const tooltips = defineMessages({
   favourites: {
     id: 'notifications.filter.favourites',
     defaultMessage: 'Favorites',
+  },
+  reactions: {
+    id: 'notifications.filter.reactions',
+    defaultMessage: 'Reactions',
   },
   boosts: { id: 'notifications.filter.boosts', defaultMessage: 'Boosts' },
   polls: { id: 'notifications.filter.polls', defaultMessage: 'Poll results' },
@@ -104,6 +109,14 @@ export const FilterBar: React.FC = () => {
           title={intl.formatMessage(tooltips.favourites)}
         >
           <Icon id='star' icon={StatusLikeIcon} />
+        </BarButton>
+        <BarButton
+          selectedFilter={selectedFilter}
+          type='reaction'
+          key='reaction'
+          title={intl.formatMessage(tooltips.reactions)}
+        >
+          <Icon id='react' icon={StatusReactIcon} />
         </BarButton>
         <BarButton
           selectedFilter={selectedFilter}

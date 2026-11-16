@@ -4,6 +4,7 @@ import {
   ChatCircleIcon,
   HeartIcon,
   QuotesIcon,
+  SmileyIcon,
 } from '@phosphor-icons/react';
 
 import BoostActiveIcon from '@/svg-icons/boost_active.svg?react';
@@ -19,3 +20,5 @@ export const StatusLikeIcon = HeartIcon;
 export const StatusLikeActiveIcon = iconWeight(HeartIcon, 'fill');
 export const StatusBookmarkIcon = BookmarkSimpleIcon;
 export const StatusBookmarkActiveIcon = iconWeight(BookmarkSimpleIcon, 'fill');
+export const StatusReactIcon = SmileyIcon;
+export const StatusReactActiveIcon = iconWeight(SmileyIcon, 'fill');

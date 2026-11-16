@@ -42,7 +42,11 @@
   "moved_to_warning": "This account is marked as moved to {moved_to_link}, and may thus not accept new follows.",
   "navigation_bar.app_settings": "App settings",
   "navigation_bar.preferences": "Preferences",
+  "notification.reaction": "{name} reacted to your post",
+  "notification.reaction.name_and_others": "{name} and {count, plural, one {# other} other {# others}} reacted to your post",
   "notifications.column_settings.filter_bar.show_bar": "Show filter bar",
+  "notifications.column_settings.reaction": "Reactions:",
+  "notifications.filter.reactions": "Reactions",
   "settings.always_show_spoilers_field": "Always enable the Content Warning field",
   "settings.close": "Close",
   "settings.compose_box_opts": "Compose box",
@@ -64,9 +68,6 @@
   "settings.inline_preview_cards": "Inline preview cards for external links",
   "settings.layout_opts": "Layout options",
   "settings.media": "Media",
-  "settings.media_fullwidth": "Full-width media previews",
-  "settings.media_letterbox": "Letterbox media",
-  "settings.media_letterbox_hint": "Scale down and letterbox media to fill the image containers instead of stretching and cropping them",
   "settings.media_reveal_behind_cw": "Reveal sensitive media behind a CW by default",
   "settings.notifications.favicon_badge": "Unread notifications favicon badge",
   "settings.notifications.favicon_badge.hint": "Add a badge for unread notifications to the favicon",
@@ -105,5 +106,6 @@
   "settings.tag_misleading_links": "Tag misleading links",
   "settings.tag_misleading_links.hint": "Add a visual indication with the link target host to every link not mentioning it explicitly",
   "settings.wide_view": "Wide view (Desktop mode only)",
-  "settings.wide_view_hint": "Stretches columns to better fill the available space."
+  "settings.wide_view_hint": "Stretches columns to better fill the available space.",
+  "status.react": "React"
 }

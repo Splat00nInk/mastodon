@@ -32,6 +32,7 @@ import {
 import { StatusMeta } from './meta';
 import { StatusPrepend } from './prepend';
 import { StatusQuote } from './quote';
+import { StatusReactions } from './reactions';
 import classes from './styles.module.scss';
 import { TranslateButton } from './translate';
 import type { StatusContainerProps, StatusContextType } from './types';
@@ -262,6 +263,15 @@ export const Status: React.FC<StatusProps> = ({
               accountId={status.account.id}
             />
           </div>
+
+          {showActions &&
+            !isQuotedPost &&
+            (showDespiteFilter || !isFiltered) && (
+              <StatusReactions
+                statusId={status.id}
+                reactions={status.reactions}
+              />
+            )}
 
           {(variant === 'page' || (showActions && !isQuotedPost)) && (
             <footer className={classes.footer}>
