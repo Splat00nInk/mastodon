@@ -3,8 +3,10 @@ import type { JSX } from 'react';
 
 import classNames from 'classnames';
 
+import { replyComposeById } from '@/flavours/glitch/actions/compose_typed';
 import { LinkedDisplayName } from '@/flavours/glitch/components/display_name';
-import { replyComposeById } from 'flavours/glitch/actions/compose';
+import { StatusContext } from '@/flavours/glitch/components/status/hooks';
+import { QuotedStatus } from '@/flavours/glitch/components/status/quote';
 import { navigateToStatus } from 'flavours/glitch/actions/statuses';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { AvatarGroup } from 'flavours/glitch/components/avatar_group';
@@ -14,8 +16,6 @@ import { Icon } from 'flavours/glitch/components/icon';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 import { NOTIFICATIONS_GROUP_MAX_AVATARS } from 'flavours/glitch/models/notification_group';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
-
-import { EmbeddedStatus } from './embedded_status';
 
 const AVATAR_SIZE = 28;
 
@@ -86,7 +86,7 @@ export const NotificationGroupWithStatus: React.FC<{
       },
 
       reply: () => {
-        dispatch(replyComposeById(statusId));
+        dispatch(replyComposeById({ statusId }));
       },
     }),
     [dispatch, statusId],
@@ -139,9 +139,11 @@ export const NotificationGroupWithStatus: React.FC<{
           </div>
 
           {statusId && (
-            <div className='notification-group__main__status'>
-              <EmbeddedStatus statusId={statusId} />
-            </div>
+            <StatusContext.Provider
+              value={{ id: statusId, contextType: 'notifications' }}
+            >
+              <QuotedStatus id={statusId} clamp />
+            </StatusContext.Provider>
           )}
 
           {additionalContent && (

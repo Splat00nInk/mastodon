@@ -4,12 +4,11 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { useSelectableClick } from '@/flavours/glitch/hooks/useSelectableClick';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
+import { XIcon } from '@phosphor-icons/react';
 
-import { Button } from '../button/redesign';
-import { IconButton } from '../icon_button';
+import { useSelectableClick } from '@/flavours/glitch/hooks/useSelectableClick';
+
+import { Button, IconButton } from '../button';
 import { Popover } from '../popover';
 
 import classes from './styles.module.scss';
@@ -42,29 +41,37 @@ export const AltTextBadge: React.FC<{
 
   const [handleMouseDown, handleMouseUp] = useSelectableClick(handleClose);
 
-  const ButtonComp = isRedesignEnabled() ? Button : 'button';
-
   return (
     <>
-      <ButtonComp
+      <Button
         size='xs'
         type='button'
-        variant='solid'
+        color='media'
         ref={setButtonElement}
         className={classNames('media-gallery__alt__label', className)}
         onClick={handleClick}
         aria-expanded={open}
         aria-controls={popoverId}
         aria-haspopup='dialog'
+        tooltip={{
+          type: 'description',
+          text: (
+            <FormattedMessage
+              id='alt_text_badge.title'
+              defaultMessage='Image description'
+            />
+          ),
+        }}
       >
         ALT
-      </ButtonComp>
+        {/* Not translatable so it stays compact, like an icon */}
+      </Button>
 
       <Popover
         isOpen={open}
         onClose={handleClose}
         reference={buttonElement}
-        placement='top-end'
+        placement='bottom-start'
         offset={4}
       >
         {({ props }) => (
@@ -73,7 +80,7 @@ export const AltTextBadge: React.FC<{
               className={classNames(
                 'info-tooltip',
                 'dropdown-animation',
-                isRedesignEnabled() && classes.redesignPopover,
+                classes.redesignPopover,
               )}
               role='dialog'
               aria-labelledby={titleId}
@@ -87,20 +94,22 @@ export const AltTextBadge: React.FC<{
               <h4 id={titleId}>
                 <FormattedMessage
                   id='alt_text_badge.title'
-                  defaultMessage='Alt text'
+                  defaultMessage='Image description'
                 />
               </h4>
 
               <IconButton
-                title={intl.formatMessage({
+                icon={XIcon}
+                onClick={handleClose}
+                variant='ghost'
+                className={classes.closeButton}
+                tooltipPlacement='top'
+              >
+                {intl.formatMessage({
                   id: 'lightbox.close',
                   defaultMessage: 'Close',
                 })}
-                icon='close'
-                iconComponent={CloseIcon}
-                onClick={handleClose}
-                className={classes.closeButton}
-              />
+              </IconButton>
 
               <p>{description}</p>
             </div>

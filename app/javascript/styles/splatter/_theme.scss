@@ -1,0 +1,57 @@
+// Splat00n.ink custom skins for the redesigned (5.0) UI.
+// A skin's common.scss should `@use '@/flavours/glitch/styles/application'`,
+// then `@use '@/styles/splatter/theme'` and include `theme.background(...)`
+// (plus `theme.custom-font` for the Splat2K variants).
+
+$background-breakpoint: 890px;
+
+// Applies the Splat2K font to the whole UI. The skin must also
+// `@use '@/styles/fonts/splat2k'` so that the @font-face is emitted.
+@mixin custom-font {
+  // `html.system-font` is included so the skin's font wins over the
+  // "use system font" preference, matching the pre-redesign behaviour.
+  html,
+  html.system-font {
+    --font-body: 'Splat2K', Inter, sans-serif;
+    --font-heading: 'Splat2K', 'Cal Sans UI', Inter, sans-serif;
+    --ls-normal: 0.5px;
+  }
+}
+
+// Full-page background image shown behind the columns on desktop.
+@mixin background($image, $brightness: 0.15, $desktop-alpha: 55%) {
+  @media screen and (width >= $background-breakpoint) {
+    html {
+      background: transparent !important;
+
+      // The redesign paints the area around the columns (navigation panel,
+      // multi-column sidebar, sticky column header gutter…) with
+      // --color-bg-desktop. Make it translucent so the artwork shows through
+      // while keeping the selected theme colour as a tint.
+      --color-bg-desktop: rgb(
+        from var(--base-color-bg-desktop) r g b / #{$desktop-alpha}
+      ) !important;
+    }
+
+    body::before {
+      z-index: -1;
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: $image;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-position: top center;
+      filter: brightness($brightness);
+      pointer-events: none;
+    }
+
+    // Sticky parts of the navigation panel now have a translucent
+    // background; blur whatever scrolls underneath them.
+    ._feat_navigation_panel_header__root,
+    ._feat_navigation_panel__footer {
+      backdrop-filter: blur(12px);
+    }
+  }
+}

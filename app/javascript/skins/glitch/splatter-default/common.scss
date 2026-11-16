@@ -1,4 +1,6 @@
-@use '@/styles/splatter/variables';
 @use '@/flavours/glitch/styles/application';
-@import '@/styles/fonts/splat2k';
-@import '@/styles/splatter/diff';
+@use '@/styles/fonts/splat2k';
+@use '@/styles/splatter/theme';
+
+@include theme.custom-font;
+@include theme.background(url('@/images/bg.webp'));

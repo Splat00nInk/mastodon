@@ -2,41 +2,6 @@
 
 .closeButton {
   position: absolute;
-  top: 5px;
-  inset-inline-end: 2px;
-  padding: 10px;
-
-  --default-icon-color: var(--color-text-on-media);
-  --default-bg-color: transparent;
-  --hover-icon-color: var(--color-text-on-media);
-  --hover-bg-color: rgb(from var(--color-text-on-media) r g b / 10%);
-  --focus-outline-color: var(--color-text-on-media);
-
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-.redesignPopover {
-  @include mixins.elevation-1;
-
-  padding: var(--space-4);
-  border-radius: var(--radius-4);
-  background: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  box-shadow: none;
-  backdrop-filter: none;
-  word-break: break-all;
-
-  h4 {
-    @include mixins.type-body-strong;
-  }
-
-  .closeButton {
-    top: 0;
-    inset-inline-end: 0;
-    border-end-start-radius: var(--radius-4);
-    border-start-end-radius: var(--radius-4);
-  }
+  top: var(--space-2);
+  inset-inline-end: var(--space-2);
 }

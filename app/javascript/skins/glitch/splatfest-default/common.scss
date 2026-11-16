@@ -1,2 +1,4 @@
 @use '@/flavours/glitch/styles/application';
-@import '@/styles/splatter/diff';
+@use '@/styles/splatter/theme';
+
+@include theme.background(url('@/images/bg.webp'));

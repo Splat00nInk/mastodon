@@ -21,12 +21,22 @@ import { IdentityContext } from '@/mastodon/identity_context';
 import type { LocaleData } from '@/mastodon/locales';
 import { reducerWithInitialState } from '@/mastodon/reducers';
 import { defaultMiddleware } from '@/mastodon/store/store';
-import { mockHandlers, unhandledRequestHandler } from '@/testing/api';
+import { mockHandlers, unhandledFrameHandler } from '@/testing/api';
 
 import { modes } from './modes';
 
 import '../app/javascript/styles/application.scss';
 import './styles.css';
+
+const startMsw = mswLoader(async () => {
+  const worker = setupWorker();
+
+  await worker.start({
+    onUnhandledFrame: unhandledFrameHandler,
+  });
+
+  return worker;
+});
 
 const preview: Preview = {
   // Auto-generate docs: https://storybook.js.org/docs/writing-docs/autodocs
@@ -53,6 +63,16 @@ const preview: Preview = {
         ],
       },
     },
+    contrast: {
+      description: 'Contrast mode',
+      toolbar: {
+        title: 'Contrast',
+        items: [
+          { value: 'default', icon: 'contrastignored' },
+          { value: 'high', icon: 'contrast' },
+        ],
+      },
+    },
     loggedIn: {
       description: 'Whether a user is logged in',
       toolbar: {
@@ -68,6 +88,7 @@ const preview: Preview = {
   initialGlobals: {
     locale: 'en',
     theme: 'light',
+    contrast: 'default',
     loggedIn: 'true',
   },
   decorators: [
@@ -160,9 +181,11 @@ const preview: Preview = {
     },
     (Story, { globals }) => {
       const theme = globals.theme;
+      const contrast = globals.contrast;
       useEffect(() => {
         document.documentElement.dataset.colorScheme = theme;
-      }, [theme]);
+        document.documentElement.dataset.contrast = contrast;
+      }, [contrast, theme]);
       return <Story />;
     },
     (Story) => (
@@ -195,28 +218,17 @@ const preview: Preview = {
         </IdentityContext.Provider>
       );
     },
-    (Story, { parameters }) => {
-      useEffect(() => {
-        document.documentElement.dataset.redesign = parameters.redesign
-          ? 'true'
-          : 'false';
-      }, [parameters.redesign]);
-      return <Story />;
-    },
   ],
   loaders: [
-    mswLoader(async () => {
-      const worker = setupWorker();
-
-      await worker.start({
-        onUnhandledRequest: unhandledRequestHandler,
-      });
-
-      return worker;
-    }),
-    importCustomEmojiData,
-    importLegacyShortcodes,
-    ({ globals: { locale } }) => importEmojiData(locale),
+    // Storybook runs loaders concurrently, so wait for msw to be ready
+    async (context) => {
+      await startMsw(context);
+      await Promise.all([
+        importCustomEmojiData(),
+        importLegacyShortcodes(),
+        importEmojiData(context.globals.locale),
+      ]);
+    },
   ],
   parameters: {
     layout: 'centered',
