@@ -75,7 +75,7 @@ $backgrounds: (
   }
 }
 
-@mixin backgrounds($brightness: 0.15, $desktop-alpha: 55%) {
+@mixin backgrounds($brightness: 0.15, $desktop-alpha: 55%, $column-alpha: 85%) {
   $default: map.get($backgrounds, splatoon);
 
   // Fixed accent colour per background. `html:root` outranks the upstream
@@ -121,6 +121,28 @@ $backgrounds: (
       html[data-theme-color='#{$key}'] body::before {
         background-image: map.get($background, image);
       }
+    }
+
+    // Let the artwork show slightly through the timeline columns. Only the
+    // column containers get a translucent --color-bg-primary, so menus,
+    // popovers and modals (rendered in portals) stay opaque.
+    html ._comp_columns_area__main,
+    html .layout-multiple-columns ._comp_column__root {
+      --color-bg-primary: rgb(
+        from var(--base-color-bg) r g b / #{$column-alpha}
+      );
+    }
+
+    // …except for the composer, which floats over the timeline.
+    html ._feat_compose__root,
+    html ._feat_compose_trigger__root {
+      --color-bg-primary: var(--base-color-bg);
+    }
+
+    // Sticky header parts now let posts show through; blur them.
+    html ._comp_column_header__layout,
+    html ._comp_column_header__extraStickyContent {
+      backdrop-filter: blur(12px);
     }
 
     // The sticky column header paints the gap above the column's rounded
