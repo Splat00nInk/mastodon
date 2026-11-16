@@ -1,9 +1,48 @@
 // Splat00n.ink custom skins for the redesigned (5.0) UI.
 // A skin's common.scss should `@use '@/flavours/glitch/styles/application'`,
-// then `@use '@/styles/splatter/theme'` and include `theme.background(...)`
-// (plus `theme.custom-font` for the Splat2K variants).
+// then `@use '@/styles/splatter/theme'` and include `theme.backgrounds`
+// (plus `theme.custom-font` for the Splat2K variant).
+
+// Backgrounds are selected through Mastodon's "theme colour" setting: every
+// key of $backgrounds must also be listed in the skin's theme.yml, and has a
+// label under `color_theme.<key>` in the skin's names.yml.
+
+@use 'sass:map';
+@use '@/flavours/glitch/styles/mastodon/tokens/theme/dark';
 
 $background-breakpoint: 890px;
+
+// The first entry is the default for users without a (valid) selection.
+$backgrounds: (
+  splatoon: (
+    image: url('@/images/bg.webp'),
+    accent: orange,
+  ),
+  alterna: (
+    image: url('@/images/bg_alterna.webp'),
+    accent: cyan,
+  ),
+  frostyfest: (
+    image: url('@/images/bg_frostyfest.webp'),
+    accent: indigo,
+  ),
+  raiders: (
+    image: url('@/images/bg_raiders.webp'),
+    accent: lime,
+  ),
+  splatoween: (
+    image: url('@/images/bg_splatoween.webp'),
+    accent: orange,
+  ),
+  springfest: (
+    image: url('@/images/bg_springfest.webp'),
+    accent: pink,
+  ),
+  summernights: (
+    image: url('@/images/bg_summernights.webp'),
+    accent: indigo,
+  ),
+);
 
 // Applies the Splat2K font to the whole UI. The skin must also
 // `@use '@/styles/fonts/splat2k'` so that the @font-face is emitted.
@@ -18,8 +57,39 @@ $background-breakpoint: 890px;
   }
 }
 
-// Full-page background image shown behind the columns on desktop.
-@mixin background($image, $brightness: 0.15, $desktop-alpha: 55%) {
+// Custom skins are always rendered in dark mode (see ThemeHelper#color_scheme),
+// so only the dark palettes are needed.
+@mixin accent($name) {
+  @if $name == indigo {
+    @include dark.base-indigo;
+  } @else if $name == lime {
+    @include dark.base-lime;
+  } @else if $name == pink {
+    @include dark.base-pink;
+  } @else if $name == orange {
+    @include dark.base-orange;
+  } @else if $name == cyan {
+    @include dark.base-cyan;
+  } @else {
+    @error 'Unknown accent palette `#{$name}`.';
+  }
+}
+
+@mixin backgrounds($brightness: 0.15, $desktop-alpha: 55%) {
+  $default: map.get($backgrounds, splatoon);
+
+  // Fixed accent colour per background. `html:root` outranks the upstream
+  // `[data-color-scheme='dark'][data-theme-color='…']` selectors.
+  html:root {
+    @include accent(map.get($default, accent));
+  }
+
+  @each $key, $background in $backgrounds {
+    html:root[data-theme-color='#{$key}'] {
+      @include accent(map.get($background, accent));
+    }
+  }
+
   @media screen and (width >= $background-breakpoint) {
     html {
       background: transparent !important;
@@ -27,7 +97,7 @@ $background-breakpoint: 890px;
       // The redesign paints the area around the columns (navigation panel,
       // multi-column sidebar, sticky column header gutter…) with
       // --color-bg-desktop. Make it translucent so the artwork shows through
-      // while keeping the selected theme colour as a tint.
+      // while keeping the background's accent colour as a tint.
       --color-bg-desktop: rgb(
         from var(--base-color-bg-desktop) r g b / #{$desktop-alpha}
       ) !important;
@@ -38,7 +108,7 @@ $background-breakpoint: 890px;
       content: '';
       position: fixed;
       inset: 0;
-      background: $image;
+      background-image: map.get($default, image);
       background-size: cover;
       background-repeat: no-repeat;
       background-attachment: fixed;
@@ -47,11 +117,27 @@ $background-breakpoint: 890px;
       pointer-events: none;
     }
 
-    // Sticky parts of the navigation panel now have a translucent
-    // background; blur whatever scrolls underneath them.
-    ._feat_navigation_panel_header__root,
-    ._feat_navigation_panel__footer {
-      backdrop-filter: blur(12px);
+    @each $key, $background in $backgrounds {
+      html[data-theme-color='#{$key}'] body::before {
+        background-image: map.get($background, image);
+      }
+    }
+
+    // The navigation panel's header and footer (new post button down to the
+    // account card) are painted with --navigation-background-color, and the
+    // footer stretches over all remaining height. Keep them transparent so
+    // the artwork shows through, and only add a tinted, blurred backdrop
+    // while they are actually stuck over scrolled navigation links.
+    ._feat_navigation_panel__root:not([data-mode='slide-out']) {
+      --navigation-background-color: transparent;
+
+      ._feat_navigation_panel_header__root[data-stuck='true'],
+      ._feat_navigation_panel__footer[data-stuck='true'] {
+        background-color: rgb(
+          from var(--base-color-bg-desktop) r g b / #{$desktop-alpha}
+        );
+        backdrop-filter: blur(12px);
+      }
     }
   }
 }

@@ -3,4 +3,4 @@
 @use '@/styles/splatter/theme';
 
 @include theme.custom-font;
-@include theme.background(url('@/images/bg.webp'));
+@include theme.backgrounds;
