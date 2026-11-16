@@ -123,6 +123,20 @@ $backgrounds: (
       }
     }
 
+    // The sticky column header paints the gap above the column's rounded
+    // top with --color-bg-desktop. Keep it transparent at the top of the
+    // timeline and only cover content once it scrolls underneath.
+    html ._comp_column_header__root {
+      background: transparent;
+
+      &._comp_column_header__rootScrolledDown {
+        background-color: rgb(
+          from var(--base-color-bg-desktop) r g b / #{$desktop-alpha}
+        );
+        backdrop-filter: blur(12px);
+      }
+    }
+
     // The navigation panel's header and footer (new post button down to the
     // account card) are painted with --navigation-background-color, and the
     // footer stretches over all remaining height. Keep them transparent so
